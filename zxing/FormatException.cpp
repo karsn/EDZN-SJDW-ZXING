@@ -1,5 +1,6 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 /*
- *  FinderPatternInfo.cpp
+ *  FormatException.cpp
  *  zxing
  *
  *  Created by Christian Brunschen on 13/05/2008.
@@ -18,24 +19,23 @@
  * limitations under the License.
  */
 
-#include <zxing/detector/FinderPatternInfo.h>
+#include <zxing/FormatException.h>
 
 namespace zxing {
-namespace qrcode {
 
-FinderPatternInfo::FinderPatternInfo(std::vector<Ref<FinderPattern> > patternCenters) :
-    bottomLeft_(patternCenters[0]), topLeft_(patternCenters[1]), topRight_(patternCenters[2]) {
-}
+FormatException::FormatException() {}
 
-Ref<FinderPattern> FinderPatternInfo::getBottomLeft() {
-  return bottomLeft_;
-}
-Ref<FinderPattern> FinderPatternInfo::getTopLeft() {
-  return topLeft_;
-}
-Ref<FinderPattern> FinderPatternInfo::getTopRight() {
-  return topRight_;
+FormatException::FormatException(const char *msg) :
+    ReaderException(msg) {
 }
 
+FormatException::~FormatException() throw() {
 }
+
+FormatException const&
+FormatException::getFormatInstance() {
+  static FormatException instance;
+  return instance;
+}
+
 }

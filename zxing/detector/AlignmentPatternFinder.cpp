@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include <zxing/qrcode/detector/AlignmentPatternFinder.h>
+#include <zxing/detector/AlignmentPatternFinder.h>
 #include <zxing/ReaderException.h>
 #include <zxing/common/BitArray.h>
 #include <vector>

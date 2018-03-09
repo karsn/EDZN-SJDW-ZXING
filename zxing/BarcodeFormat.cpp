@@ -1,7 +1,5 @@
+// -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
 /*
- *  FinderPatternInfo.cpp
- *  zxing
- *
  *  Created by Christian Brunschen on 13/05/2008.
  *  Copyright 2008 ZXing authors All rights reserved.
  *
@@ -18,24 +16,25 @@
  * limitations under the License.
  */
 
-#include <zxing/detector/FinderPatternInfo.h>
+#include <zxing/BarcodeFormat.h>
 
-namespace zxing {
-namespace qrcode {
-
-FinderPatternInfo::FinderPatternInfo(std::vector<Ref<FinderPattern> > patternCenters) :
-    bottomLeft_(patternCenters[0]), topLeft_(patternCenters[1]), topRight_(patternCenters[2]) {
-}
-
-Ref<FinderPattern> FinderPatternInfo::getBottomLeft() {
-  return bottomLeft_;
-}
-Ref<FinderPattern> FinderPatternInfo::getTopLeft() {
-  return topLeft_;
-}
-Ref<FinderPattern> FinderPatternInfo::getTopRight() {
-  return topRight_;
-}
-
-}
-}
+const char* zxing::BarcodeFormat::barcodeFormatNames[] = {
+  0,
+  "AZTEC",
+  "CODABAR",
+  "CODE_39",
+  "CODE_93",
+  "CODE_128",
+  "DATA_MATRIX",
+  "EAN_8",
+  "EAN_13",
+  "ITF",
+  "MAXICODE",
+  "PDF_417",
+  "QR_CODE",
+  "RSS_14",
+  "RSS_EXPANDED",
+  "UPC_A",
+  "UPC_E",
+  "UPC_EAN_EXTENSION"
+};

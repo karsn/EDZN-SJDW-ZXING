@@ -19,14 +19,15 @@
  * limitations under the License.
  */
 
-#include <zxing/qrcode/detector/Detector.h>
-#include <zxing/qrcode/detector/FinderPatternFinder.h>
-#include <zxing/qrcode/detector/FinderPattern.h>
-#include <zxing/qrcode/detector/AlignmentPattern.h>
-#include <zxing/qrcode/detector/AlignmentPatternFinder.h>
+#include <zxing/detector/Detector.h>
+#include <zxing/detector/FinderPatternFinder.h>
+#include <zxing/detector/FinderPattern.h>
+#include <zxing/detector/AlignmentPattern.h>
+#include <zxing/detector/AlignmentPatternFinder.h>
 #include <zxing/qrcode/Version.h>
 #include <zxing/common/GridSampler.h>
 #include <zxing/DecodeHints.h>
+#include <zxing/ReaderException.h>
 #include <zxing/common/detector/MathUtils.h>
 #include <sstream>
 #include <cstdlib>

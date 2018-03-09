@@ -1,0 +1,1 @@
+origin  https://github.com/glassechidna/zxing-cpp.git (fetch)
