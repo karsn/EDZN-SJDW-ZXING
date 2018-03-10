@@ -16,7 +16,10 @@ History:
 #include <zxing/detector/Detector.h>
 #include <zxing/common/HybridBinarizer.h>
 
-using zxing::qrcode;
+using namespace std;
+using namespace zxing;
+using namespace zxing::multi;
+using namespace zxing::qrcode;
 	
 /****************************** Private typedef *******************************/
 /****************************** Private define ********************************/
