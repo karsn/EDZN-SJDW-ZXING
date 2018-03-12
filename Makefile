@@ -4,8 +4,8 @@ AllDirs := $(shell ls -R | grep '^\./.*:$$' | awk '{gsub(":","");print}') .
 Sources := $(foreach n,$(AllDirs) , $(wildcard $(n)/*.cpp))  
 Objs := $(patsubst %.cpp,%.o, $(Sources))  
 Deps := $(patsubst %.cpp,%.d, $(Sources))  
-StaticLib := libisli.a  
-DynamicLib := libisli.so  
+#StaticLib := libisli.a  
+#DynamicLib := libisli.so  
 Bin := test_detect  
   
 #AllLibs : $(DynamicLib)  

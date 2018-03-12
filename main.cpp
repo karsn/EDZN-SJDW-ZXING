@@ -15,10 +15,14 @@ History:
 #include "ImageReaderSource.h"
 #include <zxing/detector/Detector.h>
 #include <zxing/common/HybridBinarizer.h>
+#include <zxing/BinaryBitmap.h>
+#include <zxing/DecodeHints.h>
+
+#include <time.h>
 
 using namespace std;
 using namespace zxing;
-using namespace zxing::multi;
+//using namespace zxing::multi;
 using namespace zxing::qrcode;
 	
 /****************************** Private typedef *******************************/
@@ -41,7 +45,11 @@ Others:
 *******************************************************************************/
 int main(int argc, char** argv)
 {
+	string filename = argv[1];
 	Ref<LuminanceSource> source;
+	
+	clock_t TStart = clock();
+	
     try {
       source = ImageReaderSource::create(filename);
     } catch (const zxing::IllegalArgumentException &e) {
@@ -50,14 +58,24 @@ int main(int argc, char** argv)
     }
     
     Ref<Binarizer> binarizer;
-    binarizer = new HybridBinarizer(source);
+    binarizer = new HybridBinarizer(source); //implements a local thresholding algorithm
     Ref<BinaryBitmap> binary(new BinaryBitmap(binarizer));
     
     DecodeHints hints(DecodeHints::DEFAULT_HINT);
-    hints.setTryHarder(try_harder);
+    hints.setTryHarder(true);
     
-	Detector detector(image->getBlackMatrix());
+	Detector detector(binary->getBlackMatrix());
 	Ref<DetectorResult> detectorResult(detector.detect(hints));
 	ArrayRef< Ref<ResultPoint> > points (detectorResult->getPoints());
+	
+	clock_t TDelt = clock() - TStart;
+	cout << "Spend Time =" << (double)TDelt/CLOCKS_PER_SEC<<"s"<<endl;
+	
+	for (int j = 0; j < points->size(); j++) 
+	{
+      cout << "  Point[" << j <<  "]: "
+           << points[j]->getX() << " "
+           << points[j]->getY() << endl;
+    }
 	
 }
