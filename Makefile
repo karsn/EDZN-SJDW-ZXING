@@ -1,64 +1,64 @@
-SHELL = /bin/bash  
-  
-AllDirs := $(shell ls -R | grep '^\./.*:$$' | awk '{gsub(":","");print}') .  
-Sources := $(foreach n,$(AllDirs) , $(wildcard $(n)/*.cpp))  
-Objs := $(patsubst %.cpp,%.o, $(Sources))  
-Deps := $(patsubst %.cpp,%.d, $(Sources))  
-#StaticLib := libisli.a  
-#DynamicLib := libisli.so  
-Bin := test_detect  
-  
-#AllLibs : $(DynamicLib)  
-#AllLibs : $(StaticLib)   
-AllLibs : $(Bin)  
+SHELL = /bin/bash
 
-ifeq ($(ARCH),arm)   
+SOURCES := $(wildcard *.cpp)
+SOURCES += $(wildcard *.c)
+HEADERS := $(wildcard *.h)
 
-CC := arm-linux-gnueabihf-gcc
-CXX := arm-linux-gnueabihf-g++
-AR := arm-linux-gnueabihf-ar
-SYSROOT := /home/wangsh/ISLI_Scanner/rootfs-arm/
-CXXFLAGS := -g -O2 -fPIC -Wall -std=c++11
-CPPFLAGS := $(foreach n,$(AllDirs) , -I$(n))  
-LDFLAGS := -lstdc++  
+
+ifeq ($(ARCH),arm)
+
+CC=arm-linux-gnueabihf-gcc
+CXX=arm-linux-gnueabihf-g++
+
+#SYSROOT=/home/wangsh/ISLI_Scanner/rootfs-arm/ 
+
+#LIBS+= -Wl,-Bstatic -lisli -lzbar -Wl,-Bdynamic -lpng16 -lpthread
+#INC+=-I/home/wangsh/ISLI_Scanner/decoder/zbar-install-arm/include
+#LDFLAGS+=-L/usr/lib/arm-linux-gnueabihf/ -L/home/wangsh/ISLI_Scanner/decoder/zbar-install-arm/lib
+#	LDFLAGS+=-L/home/wangsh/ISLI_Scanner/decoder/isli_icon/
 
 else
 
-CC:=gcc 
-CXX:=g++
-AR:=ar
-SYSROOT := /
-CXXFLAGS := -g -O2 -fPIC -Wall -std=c++11
-CPPFLAGS := $(foreach n,$(AllDirs) , -I$(n))  
-LDFLAGS := -lstdc++
+CC=gcc
+CXX=g++
+
+#SYSROOT=/
+
+#LIBS+= -Wl,-Bstatic -lisli -Wl,-Bdynamic -lzbar -lpng16 -lpthread 
+#INC+=-I/home/wangsh/ISLI_Scanner/decoder/zbar-install/include
+#LDFLAGS+=-L/usr/local/lib/ -L/home/wangsh/ISLI_Scanner/decoder/zbar-install/lib
+#LDFLAGS+=-L/home/wangsh/ISLI_Scanner/decoder/isli_icon/
 
 endif
-	
-$(StaticLib) : $(Objs)  
-	$(AR) rcs $@ $^
-	mkdir out
-	cp $(StaticLib) out/
-	cp ISLIIconDecoder.h out/
-	cp ImageType.h out/
-  
-$(DynamicLib) : $(Objs)  
-	$(CXX) -shared -o $@ $^ $(LDFLAGS)  
-  
-$(Bin) : $(Objs)  
-	$(CXX) $(Objs) -o $@  
-  
-%.d : %.cpp  
-	$(CC) -MT"$(<:.cpp=.o) $@" -MM $(CXXFLAGS) $(CPPFLAGS) $< > $@  
-  
-sinclude $(Deps)  
 
-.PHONY : install
-install:
-	cp $(StaticLib) $(SYSROOT)/usr/lib/
-#	if [ ! -d "$(SYSROOT)/usr/include/isli/"]; then mkdir $(SYSROOT)/usr/include/isli/; fi
-	cp out/*.h $(SYSROOT)/usr/include/isli/
-	  
-.PHONY : clean  
-clean:   
-	rm -f $(Objs) $(Deps) $(StaticLib) $(DynamicLib) $(Bin)
-	rm -rf out
+CFLAGS := -Wall -ggdb3
+CXXFLAGS := -Wall -ggdb3 -std=c++11
+PRJ_PATH = $(shell pwd)
+ZXING_INC = $(PRJ_PATH)/zxing/out/include/
+ZXING_LIB = $(PRJ_PATH)/zxing/out/
+
+
+#LIBS+=-lzbar -lpng16 -lpthread
+#ALL_PROGRAM = test_video_shm bar_srv isli_icon_srv isli_line_srv
+ALL_PROGRAM = test_detect
+
+all: $(ALL_PROGRAM)
+
+#test_video: test_video.c
+#	$(CC) -o $@ $^ $(INC) $(LDFLAGS) $(CFLAGS) $(LIBS)
+
+test_video_shm: test_video_shm.c decoder_srv.h
+	$(CC) -o $@ $^ --sysroot=$(SYSROOT) $(CFLAGS) -lpng16 -lpthread -Dpng_set_gray_1_2_4_to_8=png_set_expand_gray_1_2_4_to_8
+
+test_detect: $(SOURCES) $(HEADERS)
+	$(CXX) -o $@ $^ $(CXXFLAGS) -I$(ZXING_INC) -L$(ZXING_LIB) -Wl,-Bstatic -lzxing -Wl,-Bdynamic -lstdc++
+
+isli_icon_srv : isli_icon_srv.cpp decoder_srv.h
+	$(CXX) -o $@ $^ --sysroot=$(SYSROOT) $(CXXFLAGS) -static -lisli
+
+isli_line_srv: isli_line_srv.cpp decoder_srv.h
+	$(CXX) -o $@ $^ --sysroot=$(SYSROOT) $(CXXFLAGS) -static -lisli_line
+		
+.PHONY : clean		
+clean:
+	rm -f $(ALL_PROGRAM) *.o
