@@ -60,6 +60,7 @@ public:
 
   Detector(Ref<BitMatrix> image);
   Ref<DetectorResult> detect(DecodeHints const& hints);
+  std::vector<Ref<FinderPattern> > detectFindPattern(DecodeHints const& hints);
 
 
 };

@@ -69,6 +69,7 @@ public:
   static float distance(Ref<ResultPoint> p1, Ref<ResultPoint> p2);
   FinderPatternFinder(Ref<BitMatrix> image, Ref<ResultPointCallback>const&);
   Ref<FinderPatternInfo> find(DecodeHints const& hints);
+  std::vector<Ref<FinderPattern> > find_ex(DecodeHints const& hints);
 };
 }
 }

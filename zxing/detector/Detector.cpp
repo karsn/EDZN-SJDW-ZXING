@@ -37,6 +37,7 @@ using std::abs;
 using std::min;
 using std::max;
 using zxing::qrcode::Detector;
+using zxing::qrcode::FinderPattern;
 using zxing::Ref;
 using zxing::BitMatrix;
 using zxing::ResultPointCallback;
@@ -61,6 +62,15 @@ Ref<BitMatrix> Detector::getImage() const {
 
 Ref<ResultPointCallback> Detector::getResultPointCallback() const {
   return callback_;
+}
+
+
+std::vector<Ref<FinderPattern> > Detector::detectFindPattern(DecodeHints const& hints)
+{
+	callback_ = hints.getResultPointCallback();
+  	FinderPatternFinder finder(image_, hints.getResultPointCallback());
+
+  	return finder.find_ex(hints);
 }
 
 Ref<DetectorResult> Detector::detect(DecodeHints const& hints) {
@@ -116,8 +126,9 @@ Ref<DetectorResult> Detector::processFinderPatternInfo(Ref<FinderPatternInfo> in
 
   }
 
-  Ref<PerspectiveTransform> transform = createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
-  Ref<BitMatrix> bits(sampleGrid(image_, dimension, transform));
+  //Ref<PerspectiveTransform> transform = createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
+  //Ref<BitMatrix> bits(sampleGrid(image_, dimension, transform));
+  Ref<BitMatrix> bits;
   ArrayRef< Ref<ResultPoint> > points(new Array< Ref<ResultPoint> >(alignmentPattern == 0 ? 3 : 4));
   points[0].reset(bottomLeft);
   points[1].reset(topLeft);

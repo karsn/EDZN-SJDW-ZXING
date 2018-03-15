@@ -65,13 +65,15 @@ int main(int argc, char** argv)
     hints.setTryHarder(true);
     
 	Detector detector(binary->getBlackMatrix());
-	Ref<DetectorResult> detectorResult(detector.detect(hints));
-	ArrayRef< Ref<ResultPoint> > points (detectorResult->getPoints());
+	//Ref<DetectorResult> detectorResult(detector.detect(hints));
+	//ArrayRef< Ref<ResultPoint> > points (detectorResult->getPoints());
+	
+	vector<Ref<FinderPattern> > points = detector.detectFindPattern(hints);
 	
 	clock_t TDelt = clock() - TStart;
 	cout << "Spend Time =" << (double)TDelt/CLOCKS_PER_SEC<<"s"<<endl;
 	
-	for (int j = 0; j < points->size(); j++) 
+	for (int j = 0; j < points.size(); j++) 
 	{
       cout << "  Point[" << j <<  "]: "
            << points[j]->getX() << " "
