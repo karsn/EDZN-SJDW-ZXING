@@ -1,0 +1,3 @@
+[submodule "gplugin"]
+	path = gplugin
+	url = https://github.com/karsn/EDZN-SJDW-GPLUGIN.git
