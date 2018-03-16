@@ -101,11 +101,9 @@ zxing::ArrayRef<char> ImageReaderSource::getRow(int y, zxing::ArrayRef<char> row
 zxing::ArrayRef<char> ImageReaderSource::getMatrix() const {
   const char* p = &image[0];
 
-  cout << __func__ << ": start .." << endl;
   zxing::ArrayRef<char> matrix(getWidth() * getHeight());
   char* m = &matrix[0];
   for (int y = 0; y < getHeight(); y++) {
-  	cout << __func__ << ": y=" << y << endl;
 	
     for (int x = 0; x < getWidth(); x++) {
       *m = convertPixel(p);

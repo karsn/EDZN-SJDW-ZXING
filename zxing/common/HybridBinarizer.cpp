@@ -60,11 +60,7 @@ Ref<BitMatrix> HybridBinarizer::getBlackMatrix() {
   int height = source.getHeight();
   if (width >= MINIMUM_DIMENSION && height >= MINIMUM_DIMENSION) 
   {
-  	cout << __func__ << ": Hybrid..." << width << "," << height << endl;
-
     ArrayRef<char> luminances = source.getMatrix();
-
-	cout << __func__ << ": source.getMatrix()" << endl;
 	
     int subWidth = width >> BLOCK_SIZE_POWER;
     if ((width & BLOCK_SIZE_MASK) != 0) {
@@ -77,8 +73,6 @@ Ref<BitMatrix> HybridBinarizer::getBlackMatrix() {
     ArrayRef<int> blackPoints =
       calculateBlackPoints(luminances, subWidth, subHeight, width, height);
 
-	cout << __func__ << ": calculateBlackPoints()" << endl;
-
     Ref<BitMatrix> newMatrix (new BitMatrix(width, height));
     calculateThresholdForBlock(luminances,
                                subWidth,
@@ -87,13 +81,10 @@ Ref<BitMatrix> HybridBinarizer::getBlackMatrix() {
                                height,
                                blackPoints,
                                newMatrix);
-
-	cout << __func__ << ": calculateThresholdForBlock()" << endl;
 	
     matrix_ = newMatrix;
   } else {
     // If the image is too small, fall back to the global histogram approach.
-    cout << __func__ << ": Global..." << endl;
     matrix_ = GlobalHistogramBinarizer::getBlackMatrix();
   }
   return matrix_;
